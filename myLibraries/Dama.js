@@ -5,11 +5,11 @@ var damaPreta;
 
 
 
-function Dama(){
+function Dama(){ // Classe Dama
 
-  this.posDama = createVector(0,0);
+  this.posDama = createVector(0,0); // cada peça de dama tem usa posição no espaço
 
-  this.branca = function() {
+  this.branca = function() {  // Display ou imagem que representa a peça 
 
       image(damaBranca,this.posDama.x,this.posDama.y);
   };

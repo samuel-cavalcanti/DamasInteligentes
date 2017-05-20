@@ -1,13 +1,15 @@
 var peça = [];
 
-function startGame() {
+function GameFunctions (){
+
+  this.Start = function() {
   xBranca = 81;
   yBranca = 25;
   xPreta  = 25;
   yPreta  = 305;
   umNãoUmSim = true;
 
- for(i=0;i<12;i++){
+  for(i=0;i<12;i++){
 
     peça[i] = new Dama();
     peça[12+i] = new Dama();
@@ -15,7 +17,7 @@ function startGame() {
 
 
 
- for(i=0;i<12;i++){
+  for(i=0;i<12;i++){
     peça[i].posDama.add(xBranca,yBranca);
     peça[i+12].posDama.add(xPreta,yPreta);
 
@@ -52,4 +54,7 @@ function startGame() {
   }
 
 
-}
+};
+
+
+  }
