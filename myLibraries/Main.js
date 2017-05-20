@@ -2,9 +2,9 @@ var tabuleiro;
 
 
 function preload() {
-    tabuleiro = loadImage("tabuleiro.jpg");
-    damaBranca = loadImage("damaBranca.png");
-    damaPreta = loadImage("damaPreta.png");
+    tabuleiro = loadImage("Images/tabuleiro.jpg");
+    damaBranca = loadImage("Images/damaBranca.png");
+    damaPreta = loadImage("Images/damaPreta.png");
 }
 
 
