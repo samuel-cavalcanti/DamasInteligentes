@@ -2,23 +2,25 @@ var damaBranca;
 var damaPreta;
 
 
-
-
-
 function Dama(){ // Classe Dama
 
-  this.posDama = createVector(0,0); // cada peça de dama tem usa posição no espaço
+  this.pos = createVector(0,0); // cada peça de dama tem usa posição no espaço
 
-  this.branca = function() {  // Display ou imagem que representa a peça 
 
-      image(damaBranca,this.posDama.x,this.posDama.y);
+
+
+  this.branca = function() {  // Display ou imagem que representa a peça
+
+      image(damaBranca,this.pos.x,this.pos.y);
   };
 
   this.preta = function() {
 
-    image(damaPreta,this.posDama.x,this.posDama.y);
+    image(damaPreta,this.pos.x,this.pos.y);
 
   };
+
+
 
 
 }

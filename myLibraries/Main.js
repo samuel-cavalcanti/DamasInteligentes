@@ -1,5 +1,5 @@
 var tabuleiro;
-var game = new GameFunctions();
+var game = new GameFunctions ();
 
 function preload() {
     tabuleiro = loadImage("Images/tabuleiro.jpg");
@@ -14,13 +14,13 @@ function preload() {
 
 function setup() {
     createCanvas(500, 500);
-    image(tabuleiro, 0, 0);
-    game.Start();
+    game.start();
 
 
 }
 
 function draw() {
+  game.goingON();
 
 
 
