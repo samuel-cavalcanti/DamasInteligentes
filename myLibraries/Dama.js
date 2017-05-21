@@ -9,12 +9,12 @@ function Dama(){ // Classe Dama
 
 
 
-  this.branca = function() {  // Display ou imagem que representa a peça
+  this.branca = function() {  // Display ou imagem que representa a peça branca
 
       image(damaBranca,this.pos.x,this.pos.y);
   };
 
-  this.preta = function() {
+  this.preta = function() {// Display ou imagem que representa a peça preta
 
     image(damaPreta,this.pos.x,this.pos.y);
 
