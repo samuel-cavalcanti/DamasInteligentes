@@ -1,10 +1,10 @@
 var tabuleiro;
-var game = new GameFunctions ();
+var game = new GameFunctions();
 
 function preload() { // carregar imagens que serão utilizadas
-    tabuleiro = loadImage("Images/tabuleiro.jpg");
-    damaBranca = loadImage("Images/damaBranca.png");
-    damaPreta = loadImage("Images/damaPreta.png");
+  tabuleiro = loadImage("Images/tabuleiro.jpg");
+  damaBranca = loadImage("Images/damaBranca.png");
+  damaPreta = loadImage("Images/damaPreta.png");
 }
 
 
@@ -13,8 +13,8 @@ function preload() { // carregar imagens que serão utilizadas
 
 
 function setup() {
-    createCanvas(500, 500);
-    game.start();
+  createCanvas(500, 500);
+  game.start();
 
 
 }
