@@ -1,6 +1,7 @@
 var peça = [];
 var on = false;
 var cor = true;
+var escolhido = -1;
 
 function GameFunctions() {
 
@@ -19,7 +20,7 @@ function GameFunctions() {
 
 
 
-    for (i = 0; i < 12; i++) { // setando posições iniciais
+    for (i = 0; i < 12; i++) { // adicionando posições iniciais
       peça[i].pos.add(xBranca, yBranca);
       peça[i + 12].pos.add(xPreta, yPreta);
 
@@ -54,11 +55,14 @@ function GameFunctions() {
     image(tabuleiro, 0, 0);
 
 
-    if (on)
+    if (on) {
       peça[escolhido].hold(on); // segura a peça
+      collision();
+    }
 
 
     updatePieces();
+
 
 
 
@@ -70,7 +74,7 @@ function GameFunctions() {
 
 
 function mouseClicked() { // ao clicar
-  if (on) // caso já tenha clicado a dama desgruda
+  if (on) // caso já tenha clicado,  a dama desgruda
     on = false;
 
   else if (findDama(cor) != -1) {
@@ -99,16 +103,14 @@ function updatePieces() { // atualiza as imagens das damas
 
 
 function findDama(cor) { // procura  a peça
-  if (cor)
+  if (cor) // se for for as fez das brancas  peças[i], tal que  0 <= i < 12
     j = 0;
-
-
-  if (!cor)
+  else // se não, sera a vez das pretas  tal que preta = j | 12 <= j < 24
     j = 12;
 
 
   for (i = 0; i < 12; i++) {
-    if (detectDama(mouseX, mouseY, peça[i + j].pos.x, peça[i + j].pos.y, 55, 55)) {
+    if (detectDama(mouseX, mouseY, peça[i + j].pos.x, peça[i + j].pos.y, 55)) {
 
       return i + j;
     }
@@ -119,10 +121,41 @@ function findDama(cor) { // procura  a peça
 
 }
 
-function detectDama(x0, y0, x1, y1, dimensãoX, dimensãoY) { // detecta se  o objeto x0, y0 está dentro de x1,y1
-  if (x0 >= x1 && x0 <= (x1 + dimensãoX) && y0 >= y1 && y0 <= (y1 + dimensãoY)) {
+
+function detectDama(x0, y0, x1, y1, tam) { // detecta se  o dama x0, y0 está dentro de x1,y1
+  if (x0 >= x1 && x0 <= (x1 + tam) && y0 >= y1 && y0 <= (y1 + tam)) {
     return true;
   }
   return false;
+
+}
+
+
+function collision() {
+
+  if (cor)
+    j = 0;
+
+  else
+    j = 12;
+
+
+  for (i = 0; i < 12; i++) {
+
+    if (detectObject(peça[escolhido].pos.x, peça[escolhido].pos.y, peça[i + j].pos.x, peça[i + j].pos.y, 55) && peça[ i+j] != peça[escolhido])
+      peça[i + j].pos.set(0, 0);
+  }
+
+
+
+
+}
+
+function detectObject(x0, y0, x1, y1, tam) { // detecta se  o objeto x0, y0 está dentro de x1,y1
+  if (x1 >= x0 && x1 <= (x0 + tam) && y1 >= y0 && y1 <= (y0 + tam) || (x1 + tam) >= x0 && (x1 + tam) <= (x0 + tam) && (y1 + tam) >= y0 && (y1 + tam) <= (y0 + tam))
+    return true;
+
+  else
+    return false;
 
 }

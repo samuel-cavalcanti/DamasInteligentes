@@ -12,9 +12,9 @@
  * criar função para detectar colisão entre peças
  * criar função de movimentação
  * criar um menu de pause e esse menu tem que ter:
-  * botão restart
-  * botão voltar para a tela inicial
-  * continuar partida
+   * botão restart
+   * botão voltar para a tela inicial
+   * continuar partida
 
 * criar telas de inicio e fim do jogo:
     * tela de inicio de jogo:  
