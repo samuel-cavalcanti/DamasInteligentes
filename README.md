@@ -20,8 +20,10 @@
     * tela de inicio de jogo:  
       * jogar sozinho ( contra o computador)
       * jogar com outra pessoa
+      * regras
     * tela de fim de jogo:
       * mostrar quem ganhou o jogo  
+      * créditos
       * perguntar se vai jogar novamente o mesmo modo de jogo
       * voltar a tela inicial
 

@@ -1,4 +1,92 @@
 var peça = [];
+var on = false;
+var cor = true;
+function GameFunctions (){
+
+  this.start = function() { // começa o jogo , chamando as peças  e setando posições iniciais
+      xBranca = 81;
+      yBranca = 25;
+      xPreta  = 25;
+      yPreta  = 305;
+      umNãoUmSim = true;
+
+      for(i=0;i<12;i++){ // chamando as peças
+
+        peça[i] = new Dama();
+        peça[12+i] = new Dama();
+      }
+
+
+
+      for(i=0;i<12;i++){ // setando posições iniciais
+        peça[i].pos.add(xBranca,yBranca);
+        peça[i+12].pos.add(xPreta,yPreta);
+
+        xBranca += 112;
+        xPreta  += 112;
+
+          if((i+1) % 4 == 0){
+            yBranca += 56;
+            yPreta  += 56;
+
+              if(umNãoUmSim){
+                xBranca = 25;
+                xPreta  = 81;
+                umNãoUmSim = false;
+              }
+
+              else {
+                xBranca = 81;
+                xPreta  = 25;
+              }
+
+
+
+
+          }
+      }
+
+
+
+
+  };
+
+  this.goingON = function (){
+      image(tabuleiro, 0, 0);
+
+
+        if(on)
+          peça[escolhido].hold(on); // segura a peça
+
+
+      updatePieces();
+
+
+
+
+
+  };
+
+}
+
+
+function mouseClicked(){ // ao clicar
+  if(on) // caso já tenha clicado a dama desgruda
+    on =false;
+
+  else if(findDama(cor) != -1){
+       escolhido = findDama(cor);
+       on = true;
+
+       if(cor)
+          cor = false;
+      else
+          cor = true;
+
+
+    }
+}
+
 function updatePieces(){ // atualiza as imagens das damas
 
     for(i=0;i<12;i++){
@@ -8,110 +96,34 @@ function updatePieces(){ // atualiza as imagens das damas
     }
 
 }
-function move (cor){
 
-  if(mouseIsPressed && mouseButton == LEFT){
-    posMouse = createVector(mouseX,mouseY); // pegando posição x e y do mouse
-    findDama(cor);
 
-    }
 
-}
-function findDama(cor){ // encontrar a dama  que você clicou em cima, se não clicou nela, não acontece nada
-  if(cor){ // se eu estiver procurando  entre as damas brancas  j =0 , peças brancas = pela[i], com i , 0<= i < 12
+function findDama (cor){ // procura  a peça
+  if(cor)
     j=0;
 
-  }
 
-  else{  // se não, procuro entre as pretas, as peças pretas são peça[i], com i ,11 < i < 24
-
+  if(!cor)
     j=12;
-  }
+
 
     for(i=0;i<12;i++){
+        if( detectDama(mouseX, mouseY, peça[i+j].pos.x, peça[i+j].pos.y, 55,55) ){
 
-
-      if(posMouse.x >= peça[i+j].pos.x && posMouse.x <= (peça[i+j].pos.x + 55) && posMouse.y >= peça[i+j].pos.y && posMouse.y <= (peça[i+j].pos.y + 55) ){
-          peça[i+j].pos.set(mouseX-25,mouseY-25); // a peça vencedora gruda no mouse equando estiver clicando
-          return true;
-
-      }
-
-
-
+            return i+j;
+        }
 
     }
 
-    return false;
+    return -1;
 
 }
 
-
-function GameFunctions (){
-
-this.start = function() { // começa o jogo , chamando as peças  e setando posições iniciais
-  xBranca = 81;
-  yBranca = 25;
-  xPreta  = 25;
-  yPreta  = 305;
-  umNãoUmSim = true;
-
-  for(i=0;i<12;i++){ // chamando as peças
-
-    peça[i] = new Dama();
-    peça[12+i] = new Dama();
+function detectDama (x0, y0 , x1 , y1, dimensãoX, dimensãoY ){ // detecta se  o objeto x0, y0 está dentro de x1,y1
+  if(x0 >= x1 && x0 <= (x1 + dimensãoX) && y0 >= y1 && y0 <= (y1 + dimensãoY) ){
+    return true;
   }
+  return false;
 
-
-
-  for(i=0;i<12;i++){ // setando posições iniciais
-    peça[i].pos.add(xBranca,yBranca);
-    peça[i+12].pos.add(xPreta,yPreta);
-
-    xBranca += 112;
-    xPreta  += 112;
-
-      if((i+1) % 4 == 0){
-        yBranca += 56;
-        yPreta  += 56;
-
-
-
-          if(umNãoUmSim){
-            xBranca = 25;
-            xPreta  = 81;
-            umNãoUmSim = false;
-          }
-
-          else {
-            xBranca = 81;
-            xPreta  = 25;
-          }
-
-
-
-
-      }
-  }
-
-
-
-
-
-};
-
-this.goingON = function (){
-  image(tabuleiro, 0, 0);
-
-  move(0); // zero para preto, 1 para branco
-
-  updatePieces();
-
-
-
-
-
-};
-
-
-  }
+}
