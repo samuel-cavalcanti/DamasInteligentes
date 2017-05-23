@@ -35,3 +35,5 @@
 
 
 #### adaptação de um algoritmo inteligente que deixe o jogo quase Impossível
+
+* estudar sobre a A* search algorithm 
