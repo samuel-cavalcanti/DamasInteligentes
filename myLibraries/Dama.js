@@ -32,11 +32,40 @@ function Dama() { // Classe Dama
 }
 
 function startPeças (){
-  
+
   for (i = 0; i < 12; i++) { // chamando as peças
 
     peça[i] = new Dama();
     peça[12 + i] = new Dama();
   }
+
+}
+
+
+
+function findDama(cor) { // procura  a peça
+  if (cor) // se for for as fez das brancas  peças[i], tal que  0 <= i < 12
+    j = 0;
+  else // se não, sera a vez das pretas  tal que preta = j | 12 <= j < 24
+    j = 12;
+
+
+  for (i = 0; i < 12; i++) {
+    if (detectDama(mouseX, mouseY, peça[i + j].pos.x, peça[i + j].pos.y, 55)) {
+
+      return i + j;
+    }
+
+  }
+
+  return -1;
+
+}
+
+function detectDama(x0, y0, x1, y1, tam) { // detecta se  o dama x0, y0 está dentro de x1,y1
+  if (x0 >= x1 && x0 <= (x1 + tam) && y0 >= y1 && y0 <= (y1 + tam)) {
+    return true;
+  }
+  return false;
 
 }
