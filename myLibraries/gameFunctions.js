@@ -3,62 +3,25 @@ var on = false;
 var cor = true;
 var escolhido = -1;
 
+
+
 function GameFunctions() {
 
+
+
   this.start = function() { // começa o jogo , chamando as peças  e setando posições iniciais
-    xBranca = 81;
-    yBranca = 25;
-    xPreta = 25;
-    yPreta = 305;
-    umNãoUmSim = true;
 
-    for (i = 0; i < 12; i++) { // chamando as peças
-
-      peça[i] = new Dama();
-      peça[12 + i] = new Dama();
-    }
+    startPeças (); //local: Damas.js // instacia os objetos dama
+    createTabuleiro(); //local: Tabuleiro.js // instancia o Tabuleiro
+    startDamas(); //local:  Tabuleiro.js // posiciona as Damas nas peças
 
 
-
-    for (i = 0; i < 12; i++) { // adicionando posições iniciais
-      peça[i].pos.add(xBranca, yBranca);
-      peça[i + 12].pos.add(xPreta, yPreta);
-
-      xBranca += 112;
-      xPreta += 112;
-
-      if ((i + 1) % 4 == 0) {
-        yBranca += 56;
-        yPreta += 56;
-
-        if (umNãoUmSim) {
-          xBranca = 25;
-          xPreta = 81;
-          umNãoUmSim = false;
-        } else {
-          xBranca = 81;
-          xPreta = 25;
-        }
-
-
-
-
-      }
-    }
-//teste = createVector(peça[8].pos.x+56, peça[8].y + 56);
-
-  //  print(detectObject2(peça[8],teste ));
-
-    //peça[8].pos.add(56,56,0);
-
-    //print(detectObject2(peça[8].pos,  teste));
-
-
+    //    peça[0].pos.set(25, 25);
 
   };
 
   this.goingON = function() {
-    image(tabuleiro, 0, 0);
+    
 
 
     if (on) {
@@ -67,7 +30,7 @@ function GameFunctions() {
 
     }
 
-    //  print(peça[8].pos);
+
 
     updatePieces();
 
@@ -177,7 +140,7 @@ function validPos() {
   //print("mouseX: " + mouseX + " mouseY: " + mouseY);
 
 
-  if (mouseX > 480 || mouseY > 480 || mouseX < 5 || mouseY < 5){
+  if (mouseX > 480 || mouseY > 480 || mouseX < 5 || mouseY < 5) {
 
     peça[escolhido].pos = posAtual;
     return false;
@@ -188,7 +151,7 @@ function validPos() {
       peça[escolhido].pos = ( posAtual.add(56,56) );
       */
 
-  
+
 
   return true;
 }

@@ -20,6 +20,7 @@ function setup() {
 }
 
 function draw() {
+  image(tabuleiro, 0, 0);
   game.goingON();
 
 

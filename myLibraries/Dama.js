@@ -27,6 +27,16 @@ function Dama() { // Classe Dama
   };
 
 
+
+
+}
+
+function startPeças (){
   
+  for (i = 0; i < 12; i++) { // chamando as peças
+
+    peça[i] = new Dama();
+    peça[12 + i] = new Dama();
+  }
 
 }
