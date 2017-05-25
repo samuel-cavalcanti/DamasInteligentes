@@ -6,8 +6,7 @@ function Dama() { // Classe Dama
 
   this.pos = createVector(0, 0); // cada peça de dama tem usa posição no espaço
 
-
-
+  this.size = 55;
 
   this.branca = function() { // Display ou imagem que representa a peça branca
 
@@ -31,7 +30,7 @@ function Dama() { // Classe Dama
 
 }
 
-function startPeças (){
+function startPeças() {
 
   for (i = 0; i < 12; i++) { // chamando as peças
 
@@ -44,7 +43,7 @@ function startPeças (){
 
 
 function findDama(cor) { // procura  a peça
-  if (cor) // se for for as fez das brancas  peças[i], tal que  0 <= i < 12
+  if (cor) // se for true, é as fez das brancas.  peças[i], tal que  0 <= i < 12
     j = 0;
   else // se não, sera a vez das pretas  tal que preta = j | 12 <= j < 24
     j = 12;

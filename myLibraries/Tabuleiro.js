@@ -47,23 +47,58 @@ function detectObject2(peça, novaPos, tam) { // detecta se  o objeto x0, y0 est
 
 
 function validPos() {
-  //print("mouseX: " + mouseX + " mouseY: " + mouseY);
+  quadrado = 56; // tamanho aprox do quadado da imagem, tamanho real: 56x57
+   // posAtual  está em gameFunctions e reprovadaPos tb !!
 
 
-  if (mouseX > 480 || mouseY > 480 || mouseX < 5 || mouseY < 5) {
 
+
+  if (mouseX > 473 || mouseY > 473 || mouseX < 25 || mouseY < 25) {
     peça[escolhido].pos = posAtual;
     return false;
+
+  } else if (cor) { // vez das brancas
+
+    if (detectObject(mouseX, mouseY, posAtual.x + quadrado, posAtual.y + quadrado, quadrado)) {
+      posAtual.add(quadrado, quadrado); // se clicar no quadado (certo) a direita
+
+    } else if (detectObject(mouseX, mouseY, posAtual.x - quadrado, posAtual.y + quadrado, quadrado)) {
+      posAtual.add(-quadrado, quadrado); // se clicar no quadrado (certo) a esquerda
+
+
+    } else {
+      peça[escolhido].pos = reprovadaPos; // se não for pra direita ou esquerda
+      return false;
+
+    }
+
+  } else { // vez das pretas
+    if (detectObject(mouseX, mouseY, posAtual.x + quadrado, posAtual.y - quadrado, quadrado)) {
+      posAtual.add(quadrado, -quadrado); // se clicar no quadado (certo) a direita
+
+    } else if (detectObject(mouseX, mouseY, posAtual.x - quadrado, posAtual.y - quadrado, quadrado)) {
+      posAtual.add(-quadrado, -quadrado); // se clicar no quadrado (certo) a esquerda
+
+
+    } else {
+      peça[escolhido].pos = reprovadaPos; // se não for pra direita ou esquerda
+      return false;
+
+    }
+
   }
 
-  /*  else if ( detectObject(posAtual.x, posAtual.y, posAtual.x+56,posAtual.y+56,55) ){
-      print("entrou");
-      peça[escolhido].pos = ( posAtual.add(56,56) );
-      */
+  if (checkPosition()) {
+    peça[escolhido].pos = posAtual;
+    return true;
+  } else {
+    peça[escolhido].pos = reprovadaPos;
+    return false;
+
+  }
 
 
 
-  return true;
 }
 
 function detectObject(x0, y0, x1, y1, tam) { // detecta se  o objeto x0, y0 está dentro de x1,y1
@@ -75,24 +110,16 @@ function detectObject(x0, y0, x1, y1, tam) { // detecta se  o objeto x0, y0 est�
 
 }
 
-function collision() {
+function checkPosition() {
 
-  if (cor)
-    j = 0;
+  for (i = 0; i < 24; i++) {
 
-  else
-    j = 12;
-
-
-  for (i = 0; i < 12; i++) {
-
-    if (detectObject(peça[escolhido].pos.x, peça[escolhido].pos.y, peça[i + j].pos.x, peça[i + j].pos.y, 55) && peça[i + j])
-      peça[i + j].pos.set(0, 0);
+    if (posAtual.x == peça[i].pos.x && posAtual.y == peça[i].pos.y && escolhido != i){
+      return false;
+    }
   }
 
-
-
-
+  return true;
 }
 
 

@@ -38,9 +38,11 @@ function GameFunctions() {
 
 function mouseClicked() { // ao clicar
   if (on) { // caso já tenha clicado,  a dama desgruda
-    if (cor & validPos())
-      cor = false;
-    else if (validPos())
+    if (cor){
+      if( validPos())
+        cor = false;
+    }
+          else if (validPos())
       cor = true;
 
     on = false;
@@ -53,6 +55,7 @@ function mouseClicked() { // ao clicar
 
 
     posAtual = createVector(peça[escolhido].pos.x, peça[escolhido].pos.y);
+    reprovadaPos = createVector(peça[escolhido].pos.x, peça[escolhido].pos.y);
     //    print("posAtual" + posAtual);
 
   }

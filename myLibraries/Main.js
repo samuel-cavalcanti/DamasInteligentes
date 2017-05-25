@@ -1,3 +1,8 @@
+/*
+funções que mexem com o tabuleiro estão em tabuleiro.js
+objeto dama e funções referentes a ela, estão em Dama.js
+funções relacionadas ao funcionamento do jogo estão em gameFunctions.js
+*/
 var tabuleiro;
 var game = new GameFunctions();
 
