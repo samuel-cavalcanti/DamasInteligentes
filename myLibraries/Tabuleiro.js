@@ -47,36 +47,39 @@ function detectObject2(peça, novaPos, tam) { // detecta se  o objeto x0, y0 est
 
 
 function validPos() {
+
+
+  listadeVitimas  = [];
+  listadePosições = [];
   quadrado = 56; // tamanho aprox do quadado da imagem, tamanho real: 56x57
-   // posAtual  está em gameFunctions e reprovadaPos tb !!
+  // posAtual  está em gameFunctions e reprovadaPos tb !!
+
+  finalDoTabuleiro = 473; // final do tabuleiro
+  inicioDoTabuleiro = 25; //  inicio do tabuleiro
 
 
-
-
-  if (mouseX > 473 || mouseY > 473 || mouseX < 25 || mouseY < 25) {
+  if (mouseX > finalDoTabuleiro || mouseY > finalDoTabuleiro || mouseX < inicioDoTabuleiro || mouseY < inicioDoTabuleiro) {
     peça[escolhido].pos = posAtual;
     return false;
 
   } else if (cor) { // vez das brancas
-
-    if (detectObject(mouseX, mouseY, posAtual.x + quadrado, posAtual.y + quadrado, quadrado)) {
+    if (detectObject(mouseX, mouseY, posAtual.x + quadrado, posAtual.y + quadrado, quadrado) && checkPosition( posAtual.x + quadrado,posAtual.y + quadrado, -1) ) {
       posAtual.add(quadrado, quadrado); // se clicar no quadado (certo) a direita
 
-    } else if (detectObject(mouseX, mouseY, posAtual.x - quadrado, posAtual.y + quadrado, quadrado)) {
+    } else if (detectObject(mouseX, mouseY, posAtual.x - quadrado, posAtual.y + quadrado, quadrado) && checkPosition( posAtual.x - quadrado,posAtual.y + quadrado, -1) ) {
       posAtual.add(-quadrado, quadrado); // se clicar no quadrado (certo) a esquerda
-
 
     } else {
       peça[escolhido].pos = reprovadaPos; // se não for pra direita ou esquerda
       return false;
-
     }
 
+
   } else { // vez das pretas
-    if (detectObject(mouseX, mouseY, posAtual.x + quadrado, posAtual.y - quadrado, quadrado)) {
+    if (detectObject(mouseX, mouseY, posAtual.x + quadrado, posAtual.y - quadrado, quadrado) && checkPosition( posAtual.x + quadrado,posAtual.y - quadrado, -1) ) {
       posAtual.add(quadrado, -quadrado); // se clicar no quadado (certo) a direita
 
-    } else if (detectObject(mouseX, mouseY, posAtual.x - quadrado, posAtual.y - quadrado, quadrado)) {
+    } else if (detectObject(mouseX, mouseY, posAtual.x - quadrado, posAtual.y - quadrado, quadrado) && checkPosition( posAtual.x - quadrado,posAtual.y - quadrado, -1) ) {
       posAtual.add(-quadrado, -quadrado); // se clicar no quadrado (certo) a esquerda
 
 
@@ -86,18 +89,12 @@ function validPos() {
 
     }
 
-  }
 
-  if (checkPosition()) {
-    peça[escolhido].pos = posAtual;
-    return true;
-  } else {
-    peça[escolhido].pos = reprovadaPos;
-    return false;
 
   }
 
-
+  peça[escolhido].pos = posAtual;
+  return true;
 
 }
 
@@ -110,14 +107,29 @@ function detectObject(x0, y0, x1, y1, tam) { // detecta se  o objeto x0, y0 est�
 
 }
 
-function checkPosition() {
+function checkPosition(posiçãoX, posiçãoY, tipo) {
 
-  for (i = 0; i < 24; i++) {
 
-    if (posAtual.x == peça[i].pos.x && posAtual.y == peça[i].pos.y && escolhido != i){
+  if (tipo == 1) { // procura pelas pretas
+    inicial = 12;
+    final = 24;
+  } else if (tipo == 0) { // procura pelas brancas
+    inicial = 0;
+    final = 12;
+  } else if (tipo == -1) { // procura por todas as peças
+    inicial = 0;
+    final = 24;
+  } else if (tipo != 0 && tipo != 1 && tipo != -1) // você fe merda, corriga.
+    alert("Erro no tipo");
+
+  for (i = inicial; i < final; i++) {
+
+    if (posiçãoX == peça[i].pos.x && posiçãoY == peça[i].pos.y && escolhido != i) {
+      vitima = i;
       return false;
     }
   }
+
 
   return true;
 }
@@ -131,4 +143,12 @@ function updatePieces() { // atualiza as imagens das damas
 
   }
 
+}
+
+function teste (x){
+   if (! checkPosition( posAtual.x + x*quadrado,posAtual.y + x*quadrado, -1) ){
+      listadeVitimas[x-1]= vitima;
+      listadePosições[x-1].push() 
+      teste(x+x);
+   }
 }

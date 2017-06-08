@@ -13,13 +13,6 @@ function GameFunctions() {
 
     startPeças(); // damas.js instancia as damas
     setPeças();  // Tabuleiro.js seta as peças na matrix
-    //teste = createVector(peça[8].pos.x+56, peça[8].y + 56);
-
-    //  print(detectObject2(peça[8],teste ));
-
-    //peça[8].pos.add(56,56,0);
-
-    //print(detectObject2(peça[8].pos,  teste));
 
 
 
@@ -51,6 +44,7 @@ function mouseClicked() { // ao clicar
   } else if (findDama(cor) != -1) {
     escolhido = findDama(cor);
     on = true;
+
 
 
 

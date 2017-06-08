@@ -16,7 +16,6 @@ function preload() { // carregar imagens que serão utilizadas
 
 
 
-
 function setup() {
   createCanvas(500, 500);
   game.start();
