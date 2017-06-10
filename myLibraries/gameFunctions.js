@@ -1,6 +1,6 @@
 var peça = [];
 var on = false;
-var cor = true;
+var cor = true; // true == brancas , false  == pretas
 var escolhido = -1;
 
 
@@ -31,7 +31,7 @@ function GameFunctions() {
 
 function mouseClicked() { // ao clicar
   if (on) { // caso já tenha clicado,  a dama desgruda
-    if (cor){
+    if (cor){ // true == brancas , false == pretas
       if( validPos())
         cor = false;
     }
@@ -49,7 +49,6 @@ function mouseClicked() { // ao clicar
 
 
     posAtual = createVector(peça[escolhido].pos.x, peça[escolhido].pos.y);
-    reprovadaPos = createVector(peça[escolhido].pos.x, peça[escolhido].pos.y);
     //    print("posAtual" + posAtual);
 
   }
