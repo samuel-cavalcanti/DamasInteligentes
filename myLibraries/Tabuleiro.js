@@ -53,11 +53,11 @@ function validPos() {
   quadrado = 56; // tamanho aprox do quadado da imagem, tamanho real: 56x57
   // posAtual  está em gameFunctions e reprovadaPos tb !!
 
-  finalDoTabuleiro = 473; // final do tabuleiro
+  finalDoTabuleiro = 417; // final do tabuleiro
   inicioDoTabuleiro = 25; //  inicio do tabuleiro
   all = -1;
 
-  print("mouseX: " + (mouseX - 27.5) + " mouse Y: " + (mouseY - 27.5));
+
   if (cor) { // se for a vez das brancas
     possibleMoves(posAtual.x + quadrado, posAtual.y + quadrado);
     possibleMoves(posAtual.x - quadrado, posAtual.y + quadrado);
@@ -76,7 +76,11 @@ function validPos() {
 
 
   }
+  for( i =0; i<listadeVitimas.lenght; i++){
+  
 
+
+  }
 
   peça[escolhido].pos = posAtual;
   return false;
@@ -84,7 +88,7 @@ function validPos() {
 
 function possibleMoves(x, y) { // verifica possiveis jogadas em uma direção
 
-  if (x >= finalDoTabuleiro || y >= finalDoTabuleiro)
+  if (x > finalDoTabuleiro || y > finalDoTabuleiro || x < inicioDoTabuleiro || y < inicioDoTabuleiro )
     return;
   // all == -1
   else if (checkPosition(x, y, all)) { // Tem alguma peça ? , caso não tenha
@@ -101,14 +105,16 @@ function possibleMoves(x, y) { // verifica possiveis jogadas em uma direção
 }
 
 function cachingCheckers(x, y) { // mapea todas possibilidades de damas
-  print ( "passou");
-  if (x >= finalDoTabuleiro || y >= finalDoTabuleiro)
+  print ( "passou" + contadorDePosições);
+  print("x: " + x + " y: "+ y+ " posAtual: " + posAtual);
+  if (x > finalDoTabuleiro || y > finalDoTabuleiro || x < inicioDoTabuleiro || y < inicioDoTabuleiro )
     return;
   else if (checkPosition(x, y, all)) { // tem alguma peça ? , caso não tenha
     listadePosições[contadorDePosições] = [x, y];
     listadeVitimas[contadorDeVitimas] = possívelvitima;
     contadorDePosições++;
     contadorDeVitimas++; // ASSASSINO !
+    possiblesSearches(x,y);
   } else if (!checkPosition(x, y, cor)) {
     possívelvitima = vitima;
     possiblesSearches(x, y);
@@ -147,7 +153,8 @@ function checkPosition(posiçãoX, posiçãoY, tipo) { // true == posição vazi
 
 
 function possiblesSearches(x, y) {
-  print("passou");
+  print("passou 1");
+  print("x: " + x + " y: "+ y+ " posAtual: " + posAtual);
   if (x > posAtual.x && y > posAtual.y)
     cachingCheckers(x + quadrado, y + quadrado);
   else if (x < posAtual.x && y > posAtual.y)
