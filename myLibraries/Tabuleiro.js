@@ -44,7 +44,7 @@ function updatePieces() { // atualiza as imagens das damas
 
 }
 
-function validPos() {
+function validPos(x,y) {
 
   contadorDePosições = 0; // conta posições validas
   contadorDeVitimas = 0; // conta o numero de vítimas
@@ -52,35 +52,53 @@ function validPos() {
   listadePosições = [];
   quadrado = 56; // tamanho aprox do quadado da imagem, tamanho real: 56x57
   // posAtual  está em gameFunctions e reprovadaPos tb !!
-
   finalDoTabuleiro = 417; // final do tabuleiro
   inicioDoTabuleiro = 25; //  inicio do tabuleiro
   all = -1;
+  twoEnemy = false;
+
 
 
   if (cor) { // se for a vez das brancas
-    possibleMoves(posAtual.x + quadrado, posAtual.y + quadrado);
-    possibleMoves(posAtual.x - quadrado, posAtual.y + quadrado);
+
+    possibleMoves(x + quadrado, y + quadrado);
+      twoEnemy = false;
+    possibleMoves(x - quadrado, y + quadrado);
+      twoEnemy = false;
+    rearMove(x + quadrado, y - quadrado);
+      twoEnemy = false;
+    rearMove(x - quadrado, y - quadrado);
+
   } else { // se for as  vez das pretas
 
-    possibleMoves(posAtual.x - quadrado, posAtual.y - quadrado);
-    possibleMoves(posAtual.x + quadrado, posAtual.y - quadrado);
+    possibleMoves(x - quadrado, y - quadrado);
+      twoEnemy = false;
+    possibleMoves(x + quadrado, y - quadrado);
+      twoEnemy = false;
+    rearMove(x + quadrado, y + quadrado);
+      twoEnemy = false;
+    rearMove(x - quadrado, y + quadrado);
 
   }
+
+
   for (i = 0; i < listadePosições.length; i++) {
-    if (detectObject(mouseX , mouseY, listadePosições[i][0] , listadePosições[i][1] , quadrado)) {
+    if (detectObject(mouseX, mouseY, listadePosições[i][0], listadePosições[i][1], quadrado)) {
       peça[escolhido].pos.set(listadePosições[i][0], listadePosições[i][1]);
+
+      for (j = 0; j < listadeVitimas.length; j++) {
+        if (x - peça[listadeVitimas[j]].pos.x  == - (peça[escolhido].pos.x -peça[listadeVitimas[j]].pos.x) && y - peça[listadeVitimas[j]].pos.y  == - (peça[escolhido].pos.y -peça[listadeVitimas[j]].pos.y) )
+          peça[listadeVitimas[j]].pos.set(Infinity, Infinity);
+
+
+      }
       return true;
     }
 
 
-
   }
-  for( i =0; i<listadeVitimas.lenght; i++){
-  
 
 
-  }
 
   peça[escolhido].pos = posAtual;
   return false;
@@ -88,13 +106,19 @@ function validPos() {
 
 function possibleMoves(x, y) { // verifica possiveis jogadas em uma direção
 
-  if (x > finalDoTabuleiro || y > finalDoTabuleiro || x < inicioDoTabuleiro || y < inicioDoTabuleiro )
+  if (x > finalDoTabuleiro || y > finalDoTabuleiro || x < inicioDoTabuleiro || y < inicioDoTabuleiro)
     return;
   // all == -1
   else if (checkPosition(x, y, all)) { // Tem alguma peça ? , caso não tenha
     listadePosições[contadorDePosições] = [x, y];
     contadorDePosições++;
-  } else if (!checkPosition(x, y, cor)) { // essa peça é inimiga ? , caso sim
+    if (twoEnemy) {
+      listadeVitimas[contadorDeVitimas] = possívelvitima;
+      contadorDeVitimas++; // ASSASSINO !
+      twoEnemy = false;
+    }
+  } else if (!checkPosition(x, y, cor) && !twoEnemy) { // essa peça é inimiga ? , caso sim
+    twoEnemy = true;
     possívelvitima = vitima;
     possiblesSearches(x, y); // 4 posibilidades de buscas
 
@@ -102,27 +126,23 @@ function possibleMoves(x, y) { // verifica possiveis jogadas em uma direção
   }
 
 
+
 }
 
-function cachingCheckers(x, y) { // mapea todas possibilidades de damas
-  print ( "passou" + contadorDePosições);
-  print("x: " + x + " y: "+ y+ " posAtual: " + posAtual);
-  if (x > finalDoTabuleiro || y > finalDoTabuleiro || x < inicioDoTabuleiro || y < inicioDoTabuleiro )
+function rearMove(x, y) {
+  print("rearMove: "+ x +" " + y + "twoEnemy: "+ twoEnemy);
+  if (x > finalDoTabuleiro || y > finalDoTabuleiro || x < inicioDoTabuleiro || y < inicioDoTabuleiro)
     return;
-  else if (checkPosition(x, y, all)) { // tem alguma peça ? , caso não tenha
-    listadePosições[contadorDePosições] = [x, y];
-    listadeVitimas[contadorDeVitimas] = possívelvitima;
-    contadorDePosições++;
-    contadorDeVitimas++; // ASSASSINO !
-    possiblesSearches(x,y);
-  } else if (!checkPosition(x, y, cor)) {
+
+  if (!checkPosition(x, y, cor) && !twoEnemy) { // essa peça é inimiga ? , caso sim
+    print("rearMove checkPosition");
+    twoEnemy = true;
     possívelvitima = vitima;
-    possiblesSearches(x, y);
+    possiblesSearches(x, y); // 4 posibilidades de buscas
+
 
   }
-
 }
-
 
 function checkPosition(posiçãoX, posiçãoY, tipo) { // true == posição vazia , false posição está prenechida
 
@@ -154,21 +174,24 @@ function checkPosition(posiçãoX, posiçãoY, tipo) { // true == posição vazi
 
 function possiblesSearches(x, y) {
   print("passou 1");
-  print("x: " + x + " y: "+ y+ " posAtual: " + posAtual);
-  if (x > posAtual.x && y > posAtual.y)
-    cachingCheckers(x + quadrado, y + quadrado);
-  else if (x < posAtual.x && y > posAtual.y)
-    cachingCheckers(x - quadrado, y + quadrado);
-  else if (x > posAtual.x && y < posAtual.y)
-    cachingCheckers(x + quadrado, y - quadrado);
-  else if (x < posAtual.x && y < posAtual.y)
-    cachingCheckers(x - quadrado, y - quadrado);
+  print("x: " + x + " y: " + y + " posAtual: " + posAtual);
+  if (x > posAtual.x)
+    x += quadrado;
+  else
+    x -= quadrado;
+  if (y > posAtual.y)
+    y += quadrado;
+  else
+    y -= quadrado;
+
+  possibleMoves(x, y);
+
 }
 
 
 
 function detectObject(x, y, x1, y1, tam) { // detecta se  o objeto x0, y0 está dentro de x1,y1
-  if ( x>=x1 && x <= x1+tam && y > y1 && y < y1+tam )
+  if (x >= x1 && x <= x1 + tam && y > y1 && y < y1 + tam)
     return true;
 
   else

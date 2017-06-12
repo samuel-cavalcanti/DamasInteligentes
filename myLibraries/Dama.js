@@ -21,8 +21,12 @@ function Dama() { // Classe Dama
 
 
   this.hold = function(on) {
-    if (on)
-      this.pos.set(mouseX -27.5, mouseY -27.5 );
+    if (on) {
+      this.pos.set(mouseX - 27.5, mouseY - 27.5);
+
+    }
+
+
   };
 
 
