@@ -54,7 +54,7 @@
 
 
 # relatório ( até o momento )
- O objetivo do projeto consiste em criar um jogo de damas e implementar a rede neural  
+ O objetivo do projeto consiste em criar um jogo de damas e implementar a heurística  
   A * search como oponente.
 
   Até agora: já foi implementado o tabuleiro, as peças, movimentação simples e o ato  
