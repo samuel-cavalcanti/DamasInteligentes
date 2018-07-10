@@ -1,31 +1,43 @@
-var damaBranca;
-var damaPreta;
+var lightImage;
+var darkImage;
 
 
-function Dama() { // Classe Dama
+class Men { // Classe Dama
+  
+  constructor ( cor ){
 
-  this.pos = createVector(0, 0); // cada peça de dama tem usa posição no espaço
+    this.type = cor;
 
-  this.size = 55;
-
-  this.branca = function() { // Display ou imagem que representa a peça branca
-
-    image(damaBranca, this.pos.x, this.pos.y);
-  };
-
-  this.preta = function() { // Display ou imagem que representa a peça preta
-
-    image(damaPreta, this.pos.x, this.pos.y);
-
-  };
-
-
-  this.hold = function(on) {
-    if (on) {
-      this.pos.set(mouseX - 27.5, mouseY - 27.5);
-
+    switch (cor){
+  
+      case 'light':
+        this.image = lightImage;
+        break;
+      case 'dark':
+        this.image = darkImage;
+        break;
     }
 
+    this.pos = createVector(0, 0); // cada peça de dama tem usa posição no espaço
+
+    this.size = 55;
+
+  }
+ 
+
+  
+  uptadeImage () { // Display ou imagem que representa a peça branca
+
+    
+    image(this.image , this.pos.x, this.pos.y);
+   
+  }
+
+
+
+  hold (on) {
+      if (on) 
+        this.pos.set(mouseX - 27.5, mouseY - 27.5);
 
   };
 
@@ -34,12 +46,12 @@ function Dama() { // Classe Dama
 
 }
 
-function startPeças() {
+function startPieces() {
 
   for (i = 0; i < 12; i++) { // chamando as peças
 
-    peça[i] = new Dama();
-    peça[12 + i] = new Dama();
+    pieces[i] = new Men('light');
+    pieces[12 + i] = new Men('dark');
   }
 
 }
@@ -54,7 +66,7 @@ function findDama(cor) { // procura  a peça
 
 
   for (i = 0; i < 12; i++) {
-    if (detectDama(mouseX, mouseY, peça[i + j].pos.x, peça[i + j].pos.y, 55)) {
+    if (detectDama(mouseX, mouseY, pieces[i + j].pos.x, pieces[i + j].pos.y, 55)) {
 
       return i + j;
     }

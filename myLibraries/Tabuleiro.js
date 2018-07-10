@@ -1,4 +1,4 @@
-function setPeças() {
+function setPieces() {
   xBranca = 81;
   yBranca = 25;
   xPreta = 25;
@@ -8,8 +8,8 @@ function setPeças() {
 
 
   for (i = 0; i < 12; i++) { // adicionando posições iniciais
-    peça[i].pos.add(xBranca, yBranca);
-    peça[i + 12].pos.add(xPreta, yPreta);
+    pieces[i].pos.add(xBranca, yBranca);
+    pieces[i + 12].pos.add(xPreta, yPreta);
 
     xBranca += 112;
     xPreta += 112;
@@ -36,15 +36,16 @@ function setPeças() {
 
 function updatePieces() { // atualiza as imagens das damas
 
-  for (i = 0; i < 12; i++) {
-    peça[i].branca();
-    peça[i + 12].preta();
-
+  if (on) {
+    pieces[escolhido].hold(on) // peça[n].hold.on == segura a peça,ou seja, prente a peça no mouse
   }
+
+  for (i in pieces)
+    pieces[i].uptadeImage();
 
 }
 
-function validPos(x,y) {
+function validPos(x, y) {
 
   contadorDePosições = 0; // conta posições validas
   contadorDeVitimas = 0; // conta o numero de vítimas
@@ -62,21 +63,21 @@ function validPos(x,y) {
   if (cor) { // se for a vez das brancas
 
     possibleMoves(x + quadrado, y + quadrado);
-      twoEnemy = false;
+    twoEnemy = false;
     possibleMoves(x - quadrado, y + quadrado);
-      twoEnemy = false;
+    twoEnemy = false;
     rearMove(x + quadrado, y - quadrado);
-      twoEnemy = false;
+    twoEnemy = false;
     rearMove(x - quadrado, y - quadrado);
 
   } else { // se for as  vez das pretas
 
     possibleMoves(x - quadrado, y - quadrado);
-      twoEnemy = false;
+    twoEnemy = false;
     possibleMoves(x + quadrado, y - quadrado);
-      twoEnemy = false;
+    twoEnemy = false;
     rearMove(x + quadrado, y + quadrado);
-      twoEnemy = false;
+    twoEnemy = false;
     rearMove(x - quadrado, y + quadrado);
 
   }
@@ -84,11 +85,11 @@ function validPos(x,y) {
 
   for (i = 0; i < listadePosições.length; i++) {
     if (detectObject(mouseX, mouseY, listadePosições[i][0], listadePosições[i][1], quadrado)) {
-      peça[escolhido].pos.set(listadePosições[i][0], listadePosições[i][1]);
+      pieces[escolhido].pos.set(listadePosições[i][0], listadePosições[i][1]);
 
       for (j = 0; j < listadeVitimas.length; j++) {
-        if (x - peça[listadeVitimas[j]].pos.x  == - (peça[escolhido].pos.x -peça[listadeVitimas[j]].pos.x) && y - peça[listadeVitimas[j]].pos.y  == - (peça[escolhido].pos.y -peça[listadeVitimas[j]].pos.y) )
-          peça[listadeVitimas[j]].pos.set(Infinity, Infinity);
+        if (x - pieces[listadeVitimas[j]].pos.x == -(pieces[escolhido].pos.x - pieces[listadeVitimas[j]].pos.x) && y - pieces[listadeVitimas[j]].pos.y == -(pieces[escolhido].pos.y - pieces[listadeVitimas[j]].pos.y))
+          pieces[listadeVitimas[j]].pos.set(Infinity, Infinity);
 
 
       }
@@ -100,7 +101,7 @@ function validPos(x,y) {
 
 
 
-  peça[escolhido].pos = posAtual;
+  pieces[escolhido].pos = currentPos;
   return false;
 }
 
@@ -130,7 +131,7 @@ function possibleMoves(x, y) { // verifica possiveis jogadas em uma direção
 }
 
 function rearMove(x, y) {
-  print("rearMove: "+ x +" " + y + "twoEnemy: "+ twoEnemy);
+  print("rearMove: " + x + " " + y + "twoEnemy: " + twoEnemy);
   if (x > finalDoTabuleiro || y > finalDoTabuleiro || x < inicioDoTabuleiro || y < inicioDoTabuleiro)
     return;
 
@@ -161,7 +162,7 @@ function checkPosition(posiçãoX, posiçãoY, tipo) { // true == posição vazi
 
   for (i = inicial; i < final; i++) {
 
-    if (posiçãoX == peça[i].pos.x && posiçãoY == peça[i].pos.y && escolhido != i) {
+    if (posiçãoX == pieces[i].pos.x && posiçãoY == pieces[i].pos.y && escolhido != i) {
       vitima = i;
       return false;
     }
@@ -174,12 +175,12 @@ function checkPosition(posiçãoX, posiçãoY, tipo) { // true == posição vazi
 
 function possiblesSearches(x, y) {
   print("passou 1");
-  print("x: " + x + " y: " + y + " posAtual: " + posAtual);
-  if (x > posAtual.x)
+  print("x: " + x + " y: " + y + " posAtual: " + currentPos);
+  if (x >currentPos.x)
     x += quadrado;
   else
     x -= quadrado;
-  if (y > posAtual.y)
+  if (y > currentPos.y)
     y += quadrado;
   else
     y -= quadrado;
