@@ -3,13 +3,13 @@ var darkImage;
 
 
 class Men { // Classe Dama
-  
-  constructor ( cor ){
+
+  constructor(cor) {
 
     this.type = cor;
 
-    switch (cor){
-  
+    switch (cor) {
+
       case 'light':
         this.image = lightImage;
         break;
@@ -22,22 +22,25 @@ class Men { // Classe Dama
 
     this.size = 55;
 
-  }
- 
 
-  
-  uptadeImage () { // Display ou imagem que representa a peça branca
 
-    
-    image(this.image , this.pos.x, this.pos.y);
-   
   }
 
 
 
-  hold (on) {
-      if (on) 
-        this.pos.set(mouseX - 27.5, mouseY - 27.5);
+  uptadeImage() { // Display ou imagem que representa a peça branca
+
+
+    image(this.image, this.pos.x, this.pos.y);
+
+  }
+
+
+
+  holdOn() {
+
+    this.pos.x = mouseX - 27.5;
+    this.pos.y = mouseY - 27.5;
 
   };
 
@@ -46,27 +49,16 @@ class Men { // Classe Dama
 
 }
 
-function startPieces() {
-
-  for (i = 0; i < 12; i++) { // chamando as peças
-
-    pieces[i] = new Men('light');
-    pieces[12 + i] = new Men('dark');
-  }
-
-}
-
-
 
 function findDama(cor) { // procura  a peça
-  if (cor) // se for true, é as fez das brancas.  peças[i], tal que  0 <= i < 12
+  if (cor == 'light') // se for light, é as fez das brancas. peças[i], tal que  0 <= i < 12
     j = 0;
   else // se não, sera a vez das pretas  tal que preta = j | 12 <= j < 24
     j = 12;
 
 
   for (i = 0; i < 12; i++) {
-    if (detectDama(mouseX, mouseY, pieces[i + j].pos.x, pieces[i + j].pos.y, 55)) {
+    if (detectDama(mouseX, mouseY, checkers.pieces[i + j].pos.x, checkers.pieces[i + j].pos.y, 55)) {
 
       return i + j;
     }

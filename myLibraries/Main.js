@@ -1,10 +1,6 @@
-/*
-funções que mexem com o tabuleiro estão em tabuleiro.js
-objeto dama e funções referentes a ela, estão em Dama.js
-funções relacionadas ao funcionamento do jogo estão em gameFunctions.js
-*/
+
 var tabuleiro;
-var game = new GameFunctions();
+var checkers = new Checkers();
 
 function preload() { // carregar imagens que serão utilizadas
   tabuleiro = loadImage("Images/tabuleiro.jpg");
@@ -18,21 +14,19 @@ function preload() { // carregar imagens que serão utilizadas
 
 function setup() {
   createCanvas(500, 500);
-  game.start();
+  
+  checkers.start();
 
 
 }
 
-function draw() {
-  image(tabuleiro, 0, 0);
-  game.goingON();
+function draw() { 
+  checkers.gameUpdate();
+
+}
 
 
-
-
-
-
-
-
-
+function mouseClicked() { // ao clicar
+  checkers.mouseEvent();
+ 
 }
