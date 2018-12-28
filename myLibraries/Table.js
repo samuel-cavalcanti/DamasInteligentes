@@ -101,47 +101,11 @@ class CheckersTable {
 
 
     var currentPos = new Index().set(currentPiece.index)
-    var firstPos = new Index().set(currentPiece.index);
-
-
-    // y = 56*x + 25
-    // x = (y - 25)/56
-
+   
     validList.push(this.matrix[currentPos.i][currentPos.j]);
 
+    this.searchForTheLeftAndRight(currentPos,validList);
 
-
-
-    if (this.turn == 'light') {
-
-      this.enemy = 'dark';
-
-      var nextPos = new Index(firstPos.i + 1, firstPos.j + 1);
-
-
-      this.searchForValidPos(currentPos, nextPos, validList);
-
-      nextPos = new Index(firstPos.i - 1, firstPos.j + 1);
-
-      currentPos = new Index().set(firstPos);
-
-      this.searchForValidPos(currentPos, nextPos, validList);
-
-      
-
-    } else {
-      this.enemy = 'light';
-
-      var nextPos = new Index(firstPos.i - 1, firstPos.j - 1);
-
-      this.searchForValidPos(currentPos, nextPos, validList);
-
-      nextPos = new Index(firstPos.i + 1, firstPos.j - 1);
-
-      currentPos = new Index().set(firstPos);
-
-      this.searchForValidPos(currentPos, nextPos, validList);
-    }
 
     print('search ', validList);
 
@@ -155,6 +119,50 @@ class CheckersTable {
     return false
 
   }
+
+
+  searchForTheLeftAndRight(currentPos,validList){
+    
+    if (this.turn == 'light') {
+
+      this.enemy = 'dark';
+
+      this.searchForTheLeft(currentPos,validList,1);
+      
+      this.searchForTheRight(currentPos,validList,-1,1);
+     
+
+    } else {
+      this.enemy = 'light';
+
+      this.searchForTheLeft(currentPos,validList,-1);
+
+      this.searchForTheRight(currentPos,validList,1,-1);
+
+    }
+
+  }
+
+  searchForTheLeft(currentPos,validList,delta){
+
+    var initalPos = new Index().set(currentPos);
+
+    var nextPos = new Index(currentPos.i + delta, currentPos.j + delta);
+
+    this.searchForValidPos(initalPos, nextPos, validList);
+
+  }
+
+  searchForTheRight(currentPos,validList,dx,dy){
+
+    var initalPos = new Index().set(currentPos);
+
+    var nextPos = new Index(currentPos.i + dx, currentPos.j + dy);
+
+    this.searchForValidPos(initalPos, nextPos, validList);
+
+  }
+
 
   searchForValidPos(currentPos, nextPos, validList) {
 
@@ -185,11 +193,12 @@ class CheckersTable {
     if (filledNextPos == this.empt && filledCorrentPos == this.enemy) {
       validList.push(this.matrix[nextPos.i][nextPos.j]);
       this.nextCell(currentPos, nextPos)
-      this.searchForValidPos(currentPos, nextPos, validList)
+      this.searchForTheLeftAndRight(currentPos,validList)
+
     }
 
     if (filledNextPos == this.enemy && filledCorrentPos == this.empt) {
-      // validList.push(this.matrix[nextPos.i][nextPos.j]);
+      
       this.nextCell(currentPos, nextPos)
       this.searchForValidPos(currentPos, nextPos, validList)
     }
@@ -240,9 +249,7 @@ class CheckersTable {
     cell.filled = piece.type;
     piece.index.set(cell.index);
 
-
   }
-
 
   isInvalidPos(nextPos) {
     if (nextPos.i < 8 && nextPos.j < 8 && nextPos.i > -1 && nextPos.j > -1)
@@ -250,7 +257,6 @@ class CheckersTable {
         return false;
 
     return true
-
 
   }
 

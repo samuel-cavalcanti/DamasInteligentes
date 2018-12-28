@@ -37,6 +37,7 @@ class Checkers {
     if (this.clicked) { // caso já tenha clicado,  a dama desgruda
       if (this.table.validPos(this.currentPiece) ){
 
+
         if (this.table.turn == 'light')  // se o turno for das == brancas 
           this.table.turn = 'dark';
         else
