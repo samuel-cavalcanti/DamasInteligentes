@@ -3,9 +3,13 @@ class CheckersTable {
     this.grid = 56; // tamanho aprox do quadado da imagem, tamanho real: 56x57
     this.matrix = [];
     this.size = 8; // tamanho do tabuleiro é  8x8 
-    this.createMatrix();
+    this.turn = 'light';
+    this.enemy = 'dark';
+    this.empt = 'empt';
+    this.invalid = 'invalid';
     this.pieces = [];
     this.chosen = -1;
+    this.createMatrix();
   }
   createPieces() {
     for (var i = 0; i < 12; i++) { // chamando as peças
@@ -17,28 +21,28 @@ class CheckersTable {
 
   setPieces() {
     var n = 0;
-    for (var i = 1, j = 0; i < this.size; i += 2, j += 2) {
+    for (var odd = 1, even = 0; odd < this.size; odd += 2, even += 2) {
 
       // peças brancas 
-      this.fill(this.pieces[n + 0], this.matrix[0][i], 0, i);
-      this.fill(this.pieces[n + 4], this.matrix[1][j], 1, j);
-      this.fill(this.pieces[n + 8], this.matrix[2][i], 2, i);
+      this.fill(this.pieces[n + 0], this.matrix[odd][0]);
+      this.fill(this.pieces[n + 4], this.matrix[even][1]);
+      this.fill(this.pieces[n + 8], this.matrix[odd][2]);
 
       // peças pretas 
-      this.fill(this.pieces[n + 16], this.matrix[5][j], 5, j);
-      this.fill(this.pieces[n + 12], this.matrix[6][i], 6, i);
-      this.fill(this.pieces[n + 20], this.matrix[7][j], 7, j);
+      this.fill(this.pieces[n + 16], this.matrix[even][5]);
+      this.fill(this.pieces[n + 12], this.matrix[odd][6]);
+      this.fill(this.pieces[n + 20], this.matrix[even][7]);
 
       n++;
     }
 
   }
 
-  fill(piece, cell, j, i) {
+  fill(piece, cell) {
     piece.pos.set(cell.pos);
     cell.filled = piece.type;
+
     piece.index = new Index().set(cell.index);
-    piece.matrix = cell;
   }
 
 
@@ -47,9 +51,15 @@ class CheckersTable {
     for (var i = 0; i < this.size; i++) {
       this.matrix[i] = []
       for (var j = 0; j < this.size; j++) {
+        var filling;
+        if (i % 2 == 0 && j % 2 == 0 || i % 2 != 0 && j % 2 != 0)
+          filling = this.invalid;
+        else
+          filling = this.empt;
+
         this.matrix[i][j] = {
-          pos: new p5.Vector(j * this.grid + 25, i * this.grid + 25),
-          filled: 'none',
+          pos: new p5.Vector(i * this.grid + 25, j * this.grid + 25),
+          filled: filling,
           index: new Index(i, j)
         };
 
@@ -58,12 +68,12 @@ class CheckersTable {
   }
 
 
-  findMan(turn) {
-
-    if (turn == 'light') // se for light, é as fez das brancas. peças[i], tal que  0 <= i < 12
-      var j = 0;
+  findMan() {
+    var j;
+    if (this.turn == 'light') // se for light, é as fez das brancas. peças[i], tal que  0 <= i < 12
+      j = 0;
     else // se não, sera a vez das pretas  tal que preta = j | 12 <= j < 24
-      var j = 12;
+      j = 12;
 
 
     for (var i = 0; i < 12; i++) {
@@ -85,41 +95,52 @@ class CheckersTable {
 
   }
 
-  validPos(currentPiece, turn) {
+  validPos(currentPiece) {
+
     var validList = [];
-    var currentPos = currentPiece.index;
+
+
+    var currentPos = new Index().set(currentPiece.index)
+    var firstPos = new Index().set(currentPiece.index);
+
+
     // y = 56*x + 25
     // x = (y - 25)/56
 
-
-    validList.push(currentPiece.matrix);
-
-
-    if (turn == 'light') {
+    validList.push(this.matrix[currentPos.i][currentPos.j]);
 
 
-      var enemy = 'dark';
-
-      var nextPos = new Index(currentPos.i + 1, currentPos.j + 1);
 
 
-      this.searchForEnemy(currentPos, nextPos, enemy, validList);
+    if (this.turn == 'light') {
 
-      nextPos = new Index(currentPos.i - 1, currentPos.j + 1);
+      this.enemy = 'dark';
+
+      var nextPos = new Index(firstPos.i + 1, firstPos.j + 1);
 
 
-      this.searchForEnemy(currentPos, nextPos, enemy, validList);
+      this.searchForValidPos(currentPos, nextPos, validList);
+
+      nextPos = new Index(firstPos.i - 1, firstPos.j + 1);
+
+      currentPos = new Index().set(firstPos);
+
+      this.searchForValidPos(currentPos, nextPos, validList);
+
+      
 
     } else {
-      var enemy = 'light';
+      this.enemy = 'light';
 
-      var nextPos = new Index(currentPos.i - 1, currentPos.j - 1);
+      var nextPos = new Index(firstPos.i - 1, firstPos.j - 1);
 
-      this.searchForEnemy(currentPos, nextPos, enemy, validList);
+      this.searchForValidPos(currentPos, nextPos, validList);
 
-      nextPos = new Index(currentPos.i + 1, currentPos.j - 1);
+      nextPos = new Index(firstPos.i + 1, firstPos.j - 1);
 
-      this.searchForEnemy(currentPos, nextPos, enemy, validList);
+      currentPos = new Index().set(firstPos);
+
+      this.searchForValidPos(currentPos, nextPos, validList);
     }
 
     print('search ', validList);
@@ -128,61 +149,76 @@ class CheckersTable {
     if (this.verifyPosition(currentPiece, validList))
       return true;
 
+
+ //   print('matrix:\n', this.matrix[firstPos.i][firstPos.j])
+    // currentPiece.pos.set( this.matrix[firstPos.i][firstPos.j].pos)
     return false
-
-
 
   }
 
-  searchForEnemy(currentPos, nextPos, enemy, validList) {
- 
-   
-    if (nextPos.i < 8 && nextPos.j < 8 && nextPos.i > -1 && nextPos.j > -1) {
-     
-      print(this.matrix[nextPos.j][nextPos.i] );
-      if (this.matrix[nextPos.j][nextPos.i].filled == 'none') {
-       
-       
-        validList.push(this.matrix[nextPos.j][nextPos.i]);
-       
+  searchForValidPos(currentPos, nextPos, validList) {
+
+    if (this.isInvalidPos(nextPos))
+      return;
 
 
-        if (this.matrix[currentPos.j][currentPos.i].filled == enemy) {
-          this.nextCell(currentPos, nextPos);
-          this.searchForEnemy(currentPos, nextPos, enemy, validList);
+    var filledCorrentPos = this.matrix[currentPos.i][currentPos.j].filled;
 
-        }
+    var filledNextPos = this.matrix[nextPos.i][nextPos.j].filled;
 
 
-      } else if (this.matrix[nextPos.j][nextPos.i].filled == enemy && this.matrix[currentPos.j][currentPos.i].filled != enemy) {
+    if (filledNextPos == this.empt && filledCorrentPos == this.empt)
+      return
 
-        this.nextCell(currentPos, nextPos);
 
+    if (filledNextPos == this.turn)
+      return
 
-        this.searchForEnemy(currentPos, nextPos, enemy, validList);
+    if (filledNextPos == this.enemy && filledCorrentPos == this.enemy)
+      return;
 
-      }
+    if (filledNextPos == this.empt && filledCorrentPos == this.turn) {
+      validList.push(this.matrix[nextPos.i][nextPos.j]);
+      return;
+    }
+
+    if (filledNextPos == this.empt && filledCorrentPos == this.enemy) {
+      validList.push(this.matrix[nextPos.i][nextPos.j]);
+      this.nextCell(currentPos, nextPos)
+      this.searchForValidPos(currentPos, nextPos, validList)
+    }
+
+    if (filledNextPos == this.enemy && filledCorrentPos == this.empt) {
+      // validList.push(this.matrix[nextPos.i][nextPos.j]);
+      this.nextCell(currentPos, nextPos)
+      this.searchForValidPos(currentPos, nextPos, validList)
+    }
+
+    if (filledNextPos == this.enemy && filledCorrentPos == this.turn) {
+      this.nextCell(currentPos, nextPos)
+      this.searchForValidPos(currentPos, nextPos, validList)
     }
 
   }
 
   nextCell(currentPos, nextPos) {
-    var i = nextPos.i - currentPos.i;
-    var j = nextPos.j - currentPos.j;
+    var deltaX = nextPos.i - currentPos.i;
+    var deltaY = nextPos.j - currentPos.j;
 
-    currentPos.set(nextPos.i, nextPos.j);
+    currentPos.set(nextPos);
 
-    nextPos.i += i;
-    nextPos.j += j;
+    nextPos.i += deltaX;
+    nextPos.j += deltaY;
 
 
   }
 
 
   verifyPosition(currentPiece, validList) {
-    //    print(validList);
 
     for (var i = 1; i < validList.length; i++) {
+
+
       if (this.detectMan(mouseX, mouseY, validList[i].pos.x, validList[i].pos.y, this.grid)) {
         this.swap(currentPiece, validList[i]);
 
@@ -198,14 +234,23 @@ class CheckersTable {
 
 
   swap(piece, cell) {
-    piece.matrix.filled = 'none';
+
+    this.matrix[piece.index.i][piece.index.j].filled = this.empt;
     piece.pos.set(cell.pos);
-    piece.matrix = cell;
     cell.filled = piece.type;
-    piece.index = {
-      j: (cell.pos.y - 25) / this.grid,
-      i: (cell.pos.x - 25) / this.grid
-    };
+    piece.index.set(cell.index);
+
+
+  }
+
+
+  isInvalidPos(nextPos) {
+    if (nextPos.i < 8 && nextPos.j < 8 && nextPos.i > -1 && nextPos.j > -1)
+      if (this.matrix[nextPos.i][nextPos.j].filled != this.invalid)
+        return false;
+
+    return true
+
 
   }
 

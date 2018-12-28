@@ -4,7 +4,6 @@ class Checkers {
     this.table = new CheckersTable();
 
     this.clicked = false;
-    this.turn = 'black';
   }
 
   start() { // começa o jogo , chamando as peças  e setando posições iniciais
@@ -36,23 +35,24 @@ class Checkers {
 
   mouseEvent() {
     if (this.clicked) { // caso já tenha clicado,  a dama desgruda
-      if (this.turn == 'light') { // true == brancas , false == pretas
-        if (this.table.validPos(this.currentPiece,this.turn))
-          this.turn = 'dark';
+      if (this.table.validPos(this.currentPiece) ){
 
-      } else if (this.table.validPos(this.currentPiece,this.turn))
-        this.turn = 'light';
+        if (this.table.turn == 'light')  // se o turno for das == brancas 
+          this.table.turn = 'dark';
+        else
+          this.table.turn = 'light';
+        
+      }
 
-
+  
       this.clicked = false;
 
-    } else if (this.table.findMan(this.turn) != -1) {
-      this.table.chosen = this.table.findMan(this.turn);
+    } else if (this.table.findMan() != -1) {
+      this.table.chosen = this.table.findMan();
       this.clicked = true;
 
       this.currentPiece = this.table.pieces[this.table.chosen];
-      //    print("posAtual" + posAtual);
-
+     
     }
   }
 }
