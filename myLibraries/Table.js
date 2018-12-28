@@ -97,74 +97,93 @@ class CheckersTable {
 
   validPos(currentPiece) {
 
-    var validList = [];
-
-
     var currentPos = new Index().set(currentPiece.index)
-   
-    validList.push(this.matrix[currentPos.i][currentPos.j]);
 
-    this.searchForTheLeftAndRight(currentPos,validList);
+    this.validList = [this.matrix[currentPos.i][currentPos.j]];
+
+    this.enemyList = [];
+
+    if (this.turn == 'light')
+      this.enemy = 'dark';
+    else
+      this.enemy = 'light';
 
 
-    print('search ', validList);
 
+    this.searchForLeftAndRight(currentPos);
 
-    if (this.verifyPosition(currentPiece, validList))
+    print('search ', this.validList);
+
+    if (this.verifyPosition(currentPiece))
       return true;
 
-
- //   print('matrix:\n', this.matrix[firstPos.i][firstPos.j])
-    // currentPiece.pos.set( this.matrix[firstPos.i][firstPos.j].pos)
     return false
 
   }
 
+  searchForLeftAndRight(currentPos) {
 
-  searchForTheLeftAndRight(currentPos,validList){
-    
     if (this.turn == 'light') {
-
       this.enemy = 'dark';
+      this.searchForTheLeft(currentPos, 1);
 
-      this.searchForTheLeft(currentPos,validList,1);
-      
-      this.searchForTheRight(currentPos,validList,-1,1);
-     
+      this.searchForTheRight(currentPos, -1, 1);
 
     } else {
       this.enemy = 'light';
 
-      this.searchForTheLeft(currentPos,validList,-1);
+      this.searchForTheLeft(currentPos, -1);
 
-      this.searchForTheRight(currentPos,validList,1,-1);
+      this.searchForTheRight(currentPos, 1, -1);
 
     }
 
+
+
+
+
+
   }
 
-  searchForTheLeft(currentPos,validList,delta){
+  searchForThreeDirections(currentPos, nextPos) {
+    var delta = this.getDelta(currentPos, nextPos);
+
+    if (delta.dx != 1 && delta.dy != 1)
+      this.searchForTheLeft(currentPos, 1);
+
+    if (delta.dx != -1 && delta.dy != 1)
+      this.searchForTheRight(currentPos, -1, 1);
+
+    if (delta.dx != -1 && delta.dy != -1)
+      this.searchForTheLeft(currentPos, -1);
+
+    if (delta.dx != 1 && delta.dy != -1)
+      this.searchForTheRight(currentPos, 1, -1);
+
+
+
+  }
+
+  searchForTheLeft(currentPos, delta) {
 
     var initalPos = new Index().set(currentPos);
 
     var nextPos = new Index(currentPos.i + delta, currentPos.j + delta);
 
-    this.searchForValidPos(initalPos, nextPos, validList);
-
+    this.searchForValidPos(initalPos, nextPos);
   }
 
-  searchForTheRight(currentPos,validList,dx,dy){
+  searchForTheRight(currentPos, dx, dy) {
 
     var initalPos = new Index().set(currentPos);
 
     var nextPos = new Index(currentPos.i + dx, currentPos.j + dy);
 
-    this.searchForValidPos(initalPos, nextPos, validList);
-
+    this.searchForValidPos(initalPos, nextPos);
   }
 
 
-  searchForValidPos(currentPos, nextPos, validList) {
+  searchForValidPos(currentPos, nextPos) {
 
     if (this.isInvalidPos(nextPos))
       return;
@@ -186,57 +205,68 @@ class CheckersTable {
       return;
 
     if (filledNextPos == this.empt && filledCorrentPos == this.turn) {
-      validList.push(this.matrix[nextPos.i][nextPos.j]);
+      this.validList.push(this.matrix[nextPos.i][nextPos.j]);
       return;
     }
 
     if (filledNextPos == this.empt && filledCorrentPos == this.enemy) {
-      validList.push(this.matrix[nextPos.i][nextPos.j]);
+      this.validList.push(this.matrix[nextPos.i][nextPos.j]);
+      this.enemyList.push(this.findEnemyByMatrix(this.matrix[currentPos.i][currentPos.j]))
       this.nextCell(currentPos, nextPos)
-      this.searchForTheLeftAndRight(currentPos,validList)
+      this.searchForThreeDirections(currentPos, nextPos)
 
     }
 
     if (filledNextPos == this.enemy && filledCorrentPos == this.empt) {
-      
+
       this.nextCell(currentPos, nextPos)
-      this.searchForValidPos(currentPos, nextPos, validList)
+      this.searchForValidPos(currentPos, nextPos)
     }
 
     if (filledNextPos == this.enemy && filledCorrentPos == this.turn) {
       this.nextCell(currentPos, nextPos)
-      this.searchForValidPos(currentPos, nextPos, validList)
+      this.searchForValidPos(currentPos, nextPos)
     }
 
   }
 
   nextCell(currentPos, nextPos) {
-    var deltaX = nextPos.i - currentPos.i;
-    var deltaY = nextPos.j - currentPos.j;
+    var delta = this.getDelta(currentPos, nextPos);
 
     currentPos.set(nextPos);
 
-    nextPos.i += deltaX;
-    nextPos.j += deltaY;
+    nextPos.i += delta.dx;
+    nextPos.j += delta.dy;
 
 
   }
 
+  getDelta(currentPos, nextPos) {
+    var deltaX = nextPos.i - currentPos.i;
+    var deltaY = nextPos.j - currentPos.j;
 
-  verifyPosition(currentPiece, validList) {
+    return {
+      dx: deltaX,
+      dy: deltaY
+    };
 
-    for (var i = 1; i < validList.length; i++) {
+  }
 
 
-      if (this.detectMan(mouseX, mouseY, validList[i].pos.x, validList[i].pos.y, this.grid)) {
-        this.swap(currentPiece, validList[i]);
+  verifyPosition(currentPiece) {
 
+    for (var i = 1; i < this.validList.length; i++) {
+
+
+      if (this.detectMan(mouseX, mouseY, this.validList[i].pos.x, this.validList[i].pos.y, this.grid)) {
+        this.swap(currentPiece, this.validList[i]);
+        this.removeEnemies();
         return true;
       }
 
     }
 
-    currentPiece.pos.set(validList[0].pos);
+    currentPiece.pos.set(this.validList[0].pos);
     return false;
 
   }
@@ -257,6 +287,38 @@ class CheckersTable {
         return false;
 
     return true
+
+  }
+
+  findEnemyByMatrix(cell) {
+    var enemyIndex = cell.index;
+
+    var j;
+    if (this.enemy == 'light') // se for light, é as fez das brancas. peças[i], tal que  0 <= i < 12
+      j = 0;
+    else // se não, sera a vez das pretas  tal que preta = j | 12 <= j < 24
+      j = 12;
+
+
+    for (var i = 0; i < 12; i++) {
+
+      if (this.pieces[i + j].index.equal(enemyIndex))
+        return this.pieces[i + j];
+
+    }
+
+    return -1;
+  }
+
+  removeEnemies() {
+    for (var i in this.enemyList) {
+
+      if (this.enemy == 'dark') {
+
+      }
+
+
+    }
 
   }
 

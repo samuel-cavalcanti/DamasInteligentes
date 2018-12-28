@@ -14,4 +14,11 @@ class Index {
     return this;
   }
 
+  equal (index){
+    if ( this.i == index.i && this.j == index.j)
+      return true;
+
+    return false;
+    
+  }
 }
